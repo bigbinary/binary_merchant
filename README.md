@@ -6,7 +6,13 @@ The API provided by Authorize.net CIM is could be confusing. Active Merchant has
 
 ## Testing with BinaryMerchant
 
-This gem also simplifies testing of application built using <tt>AuthorizeNetCimGateway</tt> . In the test environment use the mocked gateway as given below. Put the following code at <tt>config/intializers/binary_merchant.rb</tt> .
+You have built your application using <tt>AuthorizeNetCimGateway</tt>. Now you want to test your code. Howver you do not want to hit Authorize.net server during tests. Some people try to use <tt>BogusGateway</tt> that comes with Active Merchant. However <tt>BogusGateway</tt> does not have all the methods that can be called on <tt>AuthorizeNetCimGateway</tt>.
+
+BinaryMerchant can help .
+
+This gem provides a gateway called <tt>AuthorizeNetCimMockedGateway</tt> and this gateway returns predefined responses and does not hit Authorize.net server.
+
+Put the following code at <tt>config/intializers/binary_merchant.rb</tt> and now in test you are using mocked gateway.
 
 ```ruby
 login = <login id provided by authorize.net>
@@ -23,3 +29,12 @@ end
 gateway_klass.logger = Rails.logger
 
 ::GATEWAYP = GatewayProcessor.new( gateway_klass.new( login: login, password: transaction_key ) )
+
+## Logging of xml in development
+
+If you look at previous snippet of code you will see following line
+
+```ruby
+gateway_klass.logger = Rails.logger
+
+Because of that line in development mode you will see the xml request that is sent to Authorize.net by Active Merchant in log. Similarly the response sent by Authorize.net will also be seen in the log.
