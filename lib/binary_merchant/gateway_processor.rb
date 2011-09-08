@@ -35,7 +35,9 @@ module BinaryMerchant
     end
 
     def add_user!(options)
-      raise GatewayProcessorException unless add_user(options).first
+      result = add_user(options).first
+      raise GatewayProcessorException unless result.first
+      result
     end
 
     # Creates customer payment profile.
@@ -71,7 +73,9 @@ module BinaryMerchant
     end
 
     def add_credit_card!(options)
-      raise GatewayProcessorException unless add_credit_card(options).first
+      result = add_credit_card(options)
+      raise GatewayProcessorException unless result.first
+      result
     end
 
     # Creates authorization for the given amount.
@@ -97,7 +101,9 @@ module BinaryMerchant
     end
 
     def authorize!(options)
-      raise GatewayProcessorException unless authorize(options).first
+      result = authorize(options)
+      raise GatewayProcessorException unless result.first
+      result
     end
 
     # Voids a previously created transaction.
@@ -124,7 +130,9 @@ module BinaryMerchant
     end
 
     def void!(options)
-      raise GatewayProcessorException unless void(options).first
+      result = void(options)
+      raise GatewayProcessorException unless result.first
+      result
     end
 
     # Refunds a previously captured action.
@@ -151,7 +159,9 @@ module BinaryMerchant
     end
 
     def refund!(options)
-      raise GatewayProcessorException unless refund(options).first
+      result = refund(options)
+      raise GatewayProcessorException unless result.first
+      result
     end
 
     # Captures a previously authorized transaction.
@@ -178,7 +188,9 @@ module BinaryMerchant
     end
 
     def capture!(options)
-      raise GatewayProcessorException unless capture(options).first
+      result = capture(options)
+      raise GatewayProcessorException unless result.first
+      result
     end
 
   end
