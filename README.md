@@ -29,6 +29,7 @@ end
 gateway_klass.logger = Rails.logger
 
 ::GATEWAYP = GatewayProcessor.new( gateway_klass.new( login: login, password: transaction_key ) )
+```
 
 ## Logging of xml in development
 
@@ -36,5 +37,5 @@ If you look at previous snippet of code you will see following line
 
 ```ruby
 gateway_klass.logger = Rails.logger
-
+```
 Because of that line in development mode you will see the xml request that is sent to Authorize.net by Active Merchant in log. Similarly the response sent by Authorize.net will also be seen in the log.
