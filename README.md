@@ -6,7 +6,7 @@ The API provided by Authorize.net CIM is could be confusing. Active Merchant has
 
 ## Testing with BinaryMerchant
 
-This gem also simplifies testing of application built using <tt>AuthorizeNetCimGateway</tt> . In the test enrionment use the mocked gateway like this
+This gem also simplifies testing of application built using <tt>AuthorizeNetCimGateway</tt> . In the test environment use the mocked gateway as given below. Put the following code at <tt>config/intializers/binary_merchant.rb</tt> .
 
 ```ruby
 login = <login id provided by authorize.net>
