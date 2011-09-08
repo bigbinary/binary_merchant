@@ -10,7 +10,7 @@ This gem also simplifies testing of application built using <tt>AuthorizeNetCimG
 
 ```ruby
 login = <login id provided by authorize.net>
-transaction_key = <transaction key provided by authorize.net>
+password = <transaction key provided by authorize.net>
 
 ActiveMerchant::Billing::Base.mode = Rails.env.production? ? :production : :test
 
@@ -22,4 +22,4 @@ end
 
 gateway_klass.logger = Rails.logger
 
-::GATEWAYP = GatewayProcessor.new( gateway_klass.new( login: login, transaction_key: transaction_key ) )
+::GATEWAYP = GatewayProcessor.new( gateway_klass.new( login: login, password: transaction_key ) )
