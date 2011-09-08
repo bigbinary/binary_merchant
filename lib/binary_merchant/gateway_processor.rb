@@ -23,10 +23,10 @@ module BinaryMerchant
     # * <tt>:email</tt> -- User's  email address . This is a required field.
     #
     # This method returns an array with two elements. The second element is the response object
-    # returend by active_merchant.
+    # returend by Active Merchant.
     #
-    # If the operation was successful then the first element contains the user vault id
-    # created by Authorize.net . Upon failure the value of first element is set to nil.
+    # If the operation is successful then the first element contains the user vault id
+    # returned by Authorize.net . Upon failure the value of first element is set to nil.
     #
     def add_user(options)
       response = gateway.create_customer_profile({:profile => {:email => options.fetch(:email)}})
@@ -39,16 +39,21 @@ module BinaryMerchant
     end
 
     # Creates customer payment profile.
+    # Add credit card to the user's paymen profile and returns a vault id for the
+    # credit card. This vault id can be used in future transactions. Because of this
+    # vault id there is no need to store credit card numbers by the application.
     #
     # === Options
     # * <tt>:user_vault_id</tt> -- The valut id of the user . This is a required field.
     # * <tt>:credit_card</tt> -- The credit_card object containing credit card information . The
     #   credit_card object should respond to following methods: number, month, year and
-    #   verification_value.  <tt> credit_card.verification_value?</tt> should return true if
-    #   want verification_value to be matched. This is a required field.
+    #   verification_value.  <tt> credit_card.verification_value?</tt> should return true if you
+    #   want verification_value to be matched. What Active Merchant is calling verifcaton value
+    #   is also commonly known as CVV value. This is a required field.
     # * <tt>:address</tt> -- Bill to address to be associated to credit card. This is a hash
     #   with following keys: :first_name, :last_name, :company, :address1, :address2, :city
-    #   :state, :country, :phone_number, :fax_number . This is an optional field.
+    #   :state, :country, :phone_number, :fax_number . This is an optional field. Fields are also
+    #   optional so you can pass only the fields that you are interested in storing.
     #
     # This method returns an array with two elements. The second element is the response object
     # returend by active_merchant.
@@ -78,8 +83,8 @@ module BinaryMerchant
     # * <tt>:user_vault_id</tt> -- User vault id . This is a required field.
     #
     # This method returns an array with two elements. The second element is the response object
-    # returend by active_merchant. The first element has value true upon success. Upon failure
-    # first element will be set to false.
+    # returend by active_merchant. The first element has transction_id upon success. Upon failure
+    # first element will be set to nil.
     #
     def authorize(options)
       hash =    { transaction: { type: :auth_only,
@@ -87,7 +92,8 @@ module BinaryMerchant
                                  customer_profile_id: options.fetch(:user_vault_id),
                                  customer_payment_profile_id: options.fetch(:credit_card_vault_id) }}
       response = gateway.create_customer_profile_transaction(hash)
-      [response.success?, response]
+      value = response.success? ?  response.params['direct_response']['transaction_id'] : nil
+      [value, response]
     end
 
     def authorize!(options)
