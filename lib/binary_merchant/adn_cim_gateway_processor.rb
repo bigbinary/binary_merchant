@@ -1,20 +1,11 @@
 module BinaryMerchant
 
-  class GatewayProcessorException < StandardError
-  end
-
-  # Usage
-  #
-  # gateway = ActiveMerchant::Billing::AuthorizeNetCimGateway.new( :login => login, :password => password )
-  # ::GATEWAYP = GatewayProcessor.new( gateway )
-  # ::GATEWAYP.add_user('neeraj@BigBinary.com')
-  #
-  class GatewayProcessor
+  class ADNCIMGatewayProcessor
 
     attr_reader :gateway
 
-    def initialize(gateway)
-      @gateway = gateway
+    def initialize(_gateway)
+      @gateway = _gateway
     end
 
     # Creates customer profile.
@@ -25,13 +16,13 @@ module BinaryMerchant
     # This method returns an array with two elements. The second element is the response object
     # returend by Active Merchant.
     #
-    # If the operation is successful then the first element contains the user vault id
+    # If the operation is successful then the first element contains the customer profile id
     # returned by Authorize.net . Upon failure the value of first element is set to nil.
     #
     def add_user(options)
       response = gateway.create_customer_profile({:profile => {:email => options.fetch(:email)}})
-      value = response.success? ? response.authorization : nil
-      [value, response]
+      customer_profile_id = response.success? ? response.authorization : nil
+      [customer_profile_id, response]
     end
 
     def add_user!(options)
@@ -40,13 +31,26 @@ module BinaryMerchant
       result
     end
 
+    # Retrieves the customer profile for the given customer profile id.
+    #
+    # === options
+    #
+    # * <tt>:customer_profile_id</tt> . This is a required field.
+    #
+    # If the operation is successful then response object is returned.
+    #
+    def get_customer_profile(options)
+      gateway.get_customer_profile(options)
+    end
+
     # Creates customer payment profile.
-    # Add credit card to the user's paymen profile and returns a vault id for the
-    # credit card. This vault id can be used in future transactions. Because of this
-    # vault id there is no need to store credit card numbers by the application.
+    #
+    # Adds credit card to the user's payment profile and returns payment profile id for the
+    # credit card. This payment profile id can be used in future transactions. Because of this
+    # payment profile id there is no need to store credit card numbers by the application.
     #
     # === Options
-    # * <tt>:user_vault_id</tt> -- The valut id of the user . This is a required field.
+    # * <tt>:customer_profile_id</tt> -- The customer profile id of the user . This is a required field.
     # * <tt>:credit_card</tt> -- The credit_card object containing credit card information . The
     #   credit_card object should respond to following methods: number, month, year and
     #   verification_value.  <tt> credit_card.verification_value?</tt> should return true if you
@@ -64,12 +68,12 @@ module BinaryMerchant
     # created by Authorize.net . Upon failure the value of first element is set to nil.
     #
     def add_credit_card(options)
-      hash =    {:customer_profile_id => options.fetch(:user_vault_id),
+      hash =    {:customer_profile_id => options.fetch(:customer_profile_id),
                  :payment_profile => {:payment => {:credit_card => options.fetch(:credit_card)},
                                       :bill_to => options[:address] }}
       response = gateway.create_customer_payment_profile(hash)
-      value = response.success? ? response.params['customer_payment_profile_id'] : nil
-      [value, response]
+      payment_profile_id = response.success? ? response.params['customer_payment_profile_id'] : nil
+      [payment_profile_id, response]
     end
 
     def add_credit_card!(options)
@@ -82,9 +86,9 @@ module BinaryMerchant
     #
     # === Options
     #
-    # * <tt>:amount</tt> -- Amound to be authorized. This is a required field.
-    # * <tt>:credit_card_vault_id</tt> -- Credit card vault id . This is a required field.
-    # * <tt>:user_vault_id</tt> -- User vault id . This is a required field.
+    # * <tt>:amount</tt> -- Amount to be authorized. This is a required field.
+    # * <tt>:customer_payment_profile_id</tt> -- This is a required field.
+    # * <tt>:customer_profile_id</tt> -- This is a required field.
     #
     # This method returns an array with two elements. The second element is the response object
     # returend by active_merchant. The first element has transction_id upon success. Upon failure
@@ -93,11 +97,11 @@ module BinaryMerchant
     def authorize(options)
       hash =    { transaction: { type: :auth_only,
                                  amount: options.fetch(:amount),
-                                 customer_profile_id: options.fetch(:user_vault_id),
-                                 customer_payment_profile_id: options.fetch(:credit_card_vault_id) }}
+                                 customer_profile_id: options.fetch(:customer_profile_id),
+                                 customer_payment_profile_id: options.fetch(:customer_payment_profile_id) }}
       response = gateway.create_customer_profile_transaction(hash)
-      value = response.success? ?  response.params['direct_response']['transaction_id'] : nil
-      [value, response]
+      transaction_id = response.success? ?  response.params['direct_response']['transaction_id'] : nil
+      [transaction_id, response]
     end
 
     def authorize!(options)
@@ -112,8 +116,8 @@ module BinaryMerchant
     #
     # * <tt>:transaction_id</tt> -- Transaction id to be voided. This is a required field.
     # * <tt>:amount</tt> -- Amound to be voided. This is a required field.
-    # * <tt>:user_vault_id</tt> -- User vault id. This is a required field.
-    # * <tt>:credit_card_vault_id</tt> -- Credit card vault id. This is a required field.
+    # * <tt>:customer_profile_id</tt> -- This is a required field.
+    # * <tt>:customer_payment_profile_id</tt> -- This is a required field.
     #
     # This method returns an array with two elements. The second element is the response object
     # returend by active_merchant. The first element has value true upon success. Upon failure
@@ -123,8 +127,9 @@ module BinaryMerchant
       hash =    { transaction: { type: :void,
                                  trans_id: options.fetch(:transaction_id),
                                  amount: options.fetch(:amount),
-                                 customer_profile_id:  options.fetch(:user_vault_id),
-                                 customer_payment_profile_id:  options.fetch(:credit_card_vault_id) }}
+                                 customer_profile_id:  options.fetch(:customer_profile_id),
+                                 customer_payment_profile_id:  options.fetch(:customer_payment_profile_id) }}
+      # TODO look into if response returns a transaction_id. If yes then return that value.
       response = gateway.create_customer_profile_transaction(hash)
       [response.success?, response]
     end
@@ -140,9 +145,9 @@ module BinaryMerchant
     # === Options
     #
     # * <tt>:transaction_id</tt> -- Transaction id to be refunded. This is a required field.
-    # * <tt>:amount</tt> -- Amound to be refunded. This is a required field.
-    # * <tt>:user_vault_id</tt> -- User vault id. This is a required field.
-    # * <tt>:credit_card_vault_id</tt> -- Credit card vault id. This is a required field.
+    # * <tt>:amount</tt> -- Amount to be refunded. This is a required field.
+    # * <tt>:customer_profile_id</tt> -- This is a required field.
+    # * <tt>:customer_payment_profile_id</tt> -- This is a required field.
     #
     # This method returns an array with two elements. The second element is the response object
     # returend by active_merchant. The first element has value true upon success. Upon failure
@@ -151,9 +156,10 @@ module BinaryMerchant
     def refund(options)
       hash =    {:transaction => {:type => :refund,
                                   :amount => options.fetch(:amount),
-                                  :customer_profile_id => options.fetch(:user_vault_id),
-                                  :customer_payment_profile_id => options.fetch(:credit_card_vault_id),
+                                  :customer_profile_id => options.fetch(:customer_profile_id),
+                                  :customer_payment_profile_id => options.fetch(:customer_payment_profile_id),
                                   :trans_id => options.fetch(:transaction_id)}}
+      # TODO look into if response returns a transaction_id. If yes then return that value.
       response = gateway.create_customer_profile_transaction(hash)
       [response.success?, response]
     end
@@ -169,9 +175,9 @@ module BinaryMerchant
     # === Options
     #
     # * <tt>:transaction_id</tt> -- Transaction id to be captured. This is a required field.
-    # * <tt>:amount</tt> -- Amound to be captured. This is a required field.
-    # * <tt>:user_vault_id</tt> -- User vault id. This is a required field.
-    # * <tt>:credit_card_vault_id</tt> -- Credit card vault id. This is a required field.
+    # * <tt>:amount</tt> -- Amount to be captured. This is a required field.
+    # * <tt>:customer_profile_id</tt> -- This is a required field.
+    # * <tt>:customer_payment_profile_id</tt> -- This is a required field.
     #
     # This method returns an array with two elements. The second element is the response object
     # returend by active_merchant. The first element has value true upon success. Upon failure
@@ -180,9 +186,10 @@ module BinaryMerchant
     def capture(options)
       hash =    { transaction: { type: :prior_auth_capture,
                                  amount: options.fetch(:amount),
-                                 customer_profile_id: options.fetch(:user_vault_id),
-                                 customer_payment_profile_id: options.fetch(:credit_card_vault_id),
+                                 customer_profile_id: options.fetch(:customer_profile_id),
+                                 customer_payment_profile_id: options.fetch(:customer_payment_profile_id),
                                  trans_id: options.fetch(:transaction_id)}}
+      # TODO look into if response returns a transaction_id. If yes then return that value.
       response = gateway.create_customer_profile_transaction(hash)
       [response.success?, response]
     end

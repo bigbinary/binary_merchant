@@ -2,9 +2,11 @@
 
 It is a payment processing utility tool built on top of [Active Merchant](https://github.com/shopify/active_merchant) .
 
+Currently BinaryMerchant supports <tt>AuthorizeNetGateway</tt> and <tt>AuthorizeNetCimGateway</tt> .
+
 The API provided by Authorize.net CIM is could be confusing. Active Merchant has good support for Authorize.net CIM gateway . However the API remains a little complex. This gem simplifies the API a lot.
 
-## Testing with BinaryMerchant
+## Testing with BinaryMerchant without hitting the server
 
 You have built your application using <tt>AuthorizeNetCimGateway</tt>. Now you want to test your code. Howver you do not want to hit Authorize.net server during tests. Some people try to use <tt>BogusGateway</tt> that comes with Active Merchant. However <tt>BogusGateway</tt> does not have all the methods that can be called on <tt>AuthorizeNetCimGateway</tt>.
 
@@ -28,8 +30,39 @@ end
 
 gateway_klass.logger = Rails.logger
 
-::GATEWAYP = GatewayProcessor.new( gateway_klass.new( login: login, password: transaction_key ) )
+::ADNCIMP = GatewayProcessor.new( gateway_klass.new( login: login, password: transaction_key ) )
 ```
+
+Now you can go about doing your testing. All calls to gateway would be intercepted and a response object will be returned.
+
+## Testing with BinaryMerchnat with full roundtrip
+
+Testing using above mechanism works. However it has one issue. ActiveMerchant does a number of validation checks while building the xml. In the above case xml is never built. To do exhaustive testing we would like xml to be built. Howver that xml should not be sent to Authorize.net .  Here is how you can do full roundtrip testing. The code example is taken from a minitest but it can easily be modified if you are using rspec.
+
+```ruby
+class GatewayTest < ActiveSupport::TestCase
+
+  def setup
+    ADNCIMP.gateway.make_roundtrip = false
+  end
+
+  def test_authorize_net_returns_customer_profile_id_without_roundtrip
+    user = Factory(:user).reload
+    assert user.vault_id, "customer profile id should not be nil"
+    assert_equal "53433", user.vault_id
+  end
+
+  def test_authorize_net_returns_customer_profile_id_with_roundtrip
+    ADNCIMP.gateway.make_roundtrip = true
+    user = Factory(:user).reload
+    assert user.vault_id, "customer profile id should not be nil"
+    assert_equal "4581836", user.vault_id
+  end
+
+end
+```
+
+By default <tt>make_roundtrip</tt> value is false.
 
 ## Logging of xml in development
 
