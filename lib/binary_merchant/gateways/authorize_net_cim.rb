@@ -1,8 +1,5 @@
-module BinaryMerchant
-
-  class ADNCIMGatewayProcessor
-
-    attr_reader :gateway
+module BinaryMerchant #:nodoc:
+  class AuthorizeNetCimGateway < Gateway
 
     def initialize(_gateway)
       @gateway = _gateway
@@ -43,7 +40,8 @@ module BinaryMerchant
       gateway.get_customer_profile(options)
     end
 
-    # Creates customer payment profile.
+    # Adds credit card to the payment profile. Authorize.net calls it creating
+    # customer payment profile.
     #
     # Adds credit card to the user's payment profile and returns payment profile id for the
     # credit card. This payment profile id can be used in future transactions. Because of this
@@ -62,7 +60,7 @@ module BinaryMerchant
     #   optional so you can pass only the fields that you are interested in storing.
     #
     # This method returns an array with two elements. The second element is the response object
-    # returend by active_merchant.
+    # returend by Active Merchant.
     #
     # If the operation was successful then the first element contains the payment profile id
     # created by Authorize.net . Upon failure the value of first element is set to nil.

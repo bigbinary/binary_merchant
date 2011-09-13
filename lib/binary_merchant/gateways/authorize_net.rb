@@ -1,15 +1,9 @@
-module BinaryMerchant
-  class ADNGatewayProcessor
-
-    attr_reader :gateway
+module BinaryMerchant #:nodoc:
+  class AuthorizeNetGateway < Gateway
 
     def initialize(_gateway)
       @gateway = _gateway
-      @gateway.class.logger = @logger if @logger
-    end
-
-    def self.logger=(_logger)
-      @logger = _logger
+      super
     end
 
     # Creates authorization for the given amount.

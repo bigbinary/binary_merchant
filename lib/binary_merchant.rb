@@ -1,10 +1,9 @@
 require "binary_merchant/version"
-require "binary_merchant/adn_gateway_processor"
-require "binary_merchant/adn_cim_gateway_processor"
-require "binary_merchant/authorize_net_cim_mocked_gateway"
-require "binary_merchant/authorize_net_mocked_gateway"
+require "binary_merchant/gateway"
 
-module BinaryMerchant
-  class GatewayProcessorException < StandardError
-  end
-end
+require "binary_merchant/gateways/authorize_net"
+require "binary_merchant/gateways/authorize_net_mocked"
+
+require "binary_merchant/gateways/authorize_net_cim"
+require "binary_merchant/gateways/authorize_net_cim_mocked"
+
