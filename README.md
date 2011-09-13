@@ -17,8 +17,8 @@ This gem provides a gateway called <tt>AuthorizeNetCimMockedGateway</tt> and thi
 Put the following code at <tt>config/intializers/binary_merchant.rb</tt> and now in test you are using mocked gateway.
 
 ```ruby
-login = <login id provided by authorize.net>
-password = <transaction key provided by authorize.net>
+credentials = { login: login_id_provided_by_authorize_dot_net,
+                password: transaction_key_provided_by_authorize_net }
 
 ActiveMerchant::Billing::Base.mode = Rails.env.production? ? :production : :test
 
@@ -30,7 +30,7 @@ end
 
 gateway_klass.logger = Rails.logger
 
-::ADNCIMP = GatewayProcessor.new( gateway_klass.new( login: login, password: transaction_key ) )
+::ADNCIMP = BinaryMerchant::AuthorizeNetCimGateway.new( gateway_klass.new(credentials) )
 ```
 
 Now you can go about doing your testing. All calls to gateway would be intercepted and a response object will be returned.
