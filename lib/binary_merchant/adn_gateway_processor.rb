@@ -1,11 +1,15 @@
 module BinaryMerchant
-
   class ADNGatewayProcessor
 
     attr_reader :gateway
 
     def initialize(_gateway)
       @gateway = _gateway
+      @gateway.class.logger = @logger if @logger
+    end
+
+    def self.logger=(_logger)
+      @logger = _logger
     end
 
     # Creates authorization for the given amount.
@@ -24,6 +28,24 @@ module BinaryMerchant
     #
     def authorize(options)
       response = gateway.authorize(options.fetch(:amount), options.fetch(:creditcard), options[:extra])
+      transaction_id = response.success? ? response.params['transaction_id'] : nil
+      [transaction_id, response]
+    end
+
+    # Voids a previously created transaction.
+    #
+    # === Options
+    #
+    # * <tt>:transaction_id</tt> -- Transaction id to be voided.
+    #
+    # This method returns an array with two elements. The second element is the response object
+    # returend by Active Merchant.
+    #
+    # If the operation is successful then the first element contains the transaction id
+    # returned by Authorize.net . Upon failure the value of first element is set to nil.
+    #
+    def void(options)
+      response = gateway.void(options.fetch(:transaction_id))
       transaction_id = response.success? ? response.params['transaction_id'] : nil
       [transaction_id, response]
     end
