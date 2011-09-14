@@ -2,13 +2,13 @@
 
 It is a payment processing utility tool built on top of [Active Merchant](https://github.com/shopify/active_merchant) .
 
-Currently BinaryMerchant supports <tt>AuthorizeNetGateway</tt> and <tt>AuthorizeNetCimGateway</tt> .
+Currently BinaryMerchant supports <strong>AuthorizeNetGateway</strong> and <strong>AuthorizeNetCimGateway</strong> gateways.
 
-The API provided by Authorize.net CIM is could be confusing. Active Merchant has good support for Authorize.net CIM gateway . However the API remains a little complex. This gem simplifies the API a lot.
+The API provided by Authorize.net CIM could be a bit confusing. Active Merchant has good support for Authorize.net CIM gateway . However the API remains a little complex. This gem simplifies the API a lot.
 
 ## Testing with BinaryMerchant without hitting the server
 
-You have built your application using <tt>AuthorizeNetCimGateway</tt>. Now you want to test your code. Howver you do not want to hit Authorize.net server during tests. Some people try to use <tt>BogusGateway</tt> that comes with Active Merchant. However <tt>BogusGateway</tt> does not have all the methods that can be called on <tt>AuthorizeNetCimGateway</tt>.
+You have built your application using <strong>AuthorizeNetCimGateway</strong>. Now you want to test your code. Howver you do not want to hit Authorize.net server during tests. Some people try to use <tt>BogusGateway</tt> that comes with Active Merchant. However <tt>BogusGateway</tt> does not have all the methods that can be called on <tt>AuthorizeNetCimGateway</tt>.
 
 BinaryMerchant can help .
 
