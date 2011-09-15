@@ -55,6 +55,8 @@ module MockedCustomerProfileTransactionResponseXml
   end
 end
 
+ActiveMerchant::Billing::AuthorizeNetCimMockedGateway::VOID_TRANSACTION_ID
+
 module ActiveMerchant
   module Billing
     class AuthorizeNetCimMockedGateway < AuthorizeNetCimGateway
@@ -64,6 +66,7 @@ module ActiveMerchant
       CUSTOMER_PROFILE_ID   = '53433'
       CUSTOMER_PAYMENT_PROFILE_ID = '6729348'
       AUTHORIZATION_TRANSACTION_ID = '7864578'
+      VOID_TRANSACTION_ID = '729310076'
 
       attr_accessor :make_roundtrip
 
@@ -86,13 +89,27 @@ module ActiveMerchant
       end
 
       def create_customer_profile_transaction(options)
-        if make_roundtrip
-          self.send(:extend, MockedCustomerProfileTransactionResponseXml)
-          super
-        else
-          Response.new(true, SUCCESS_MESSAGE, {'direct_response' => {'transaction_id' => AUTHORIZATION_TRANSACTION_ID }} , {} )
+        transaction_type = options.fetch(:transaction).fetch(:type)
+
+        case transaction_type
+          when :auth_only
+            if make_roundtrip
+              self.send(:extend, MockedCustomerProfileTransactionResponseXml)
+              super
+            else
+              Response.new(true, SUCCESS_MESSAGE, {'direct_response' => {'transaction_id' => AUTHORIZATION_TRANSACTION_ID }} , {} )
+            end
+
+          when :void
+            if make_roundtrip
+              self.send(:extend, MockedCustomerProfileTransactionResponseXml)
+              super
+            else
+              Response.new(true, SUCCESS_MESSAGE, {'direct_response' => {'transaction_id' => VOID_TRANSACTION_ID }} , {} )
+            end
+
+          end
         end
-      end
 
     end
   end

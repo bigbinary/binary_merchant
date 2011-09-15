@@ -129,7 +129,9 @@ module BinaryMerchant #:nodoc:
                                  customer_payment_profile_id:  options.fetch(:customer_payment_profile_id) }}
       # TODO look into if response returns a transaction_id. If yes then return that value.
       response = gateway.create_customer_profile_transaction(hash)
-      [response.success?, response]
+      #[response.success?, response]
+      transaction_id = response.success? ?  response.params['direct_response']['transaction_id'] : nil
+      [transaction_id, response]
     end
 
     def void!(options)
