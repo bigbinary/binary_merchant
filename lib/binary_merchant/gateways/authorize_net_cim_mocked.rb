@@ -17,7 +17,8 @@ module ActiveMerchant
       SUCCESS_MESSAGE = "AuthorizeNetCimMocked Gateway: success"
       ERROR_MESSAGE   = "AuthorizeNetCimMocked Gateway: error"
       CUSTOMER_PROFILE_ID   = '53433'
-      CUSTOMER_PAYMENT_PROFILE_ID = '1234'
+      CUSTOMER_PAYMENT_PROFILE_ID = '6729348'
+      AUTHORIZATION_TRANSACTION_ID = '7864578'
 
       attr_accessor :make_roundtrip
 
@@ -40,7 +41,7 @@ module ActiveMerchant
       end
 
       def create_customer_profile_transaction(options)
-        Response.new(true, SUCCESS_MESSAGE, {'direct_response' => {'transaction_id' => '123456'}} , {} )
+        Response.new(true, SUCCESS_MESSAGE, {'direct_response' => {'transaction_id' => AUTHORIZATION_TRANSACTION_ID }} , {} )
       end
 
     end
