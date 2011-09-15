@@ -6,4 +6,3 @@ require "binary_merchant/gateways/authorize_net_mocked"
 
 require "binary_merchant/gateways/authorize_net_cim"
 require "binary_merchant/gateways/authorize_net_cim_mocked"
-

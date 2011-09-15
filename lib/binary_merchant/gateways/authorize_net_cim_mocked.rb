@@ -55,8 +55,6 @@ module MockedCustomerProfileTransactionResponseXml
   end
 end
 
-ActiveMerchant::Billing::AuthorizeNetCimMockedGateway::VOID_TRANSACTION_ID
-
 module ActiveMerchant
   module Billing
     class AuthorizeNetCimMockedGateway < AuthorizeNetCimGateway
