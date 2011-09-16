@@ -44,6 +44,11 @@ module BinaryMerchant #:nodoc:
       gateway.update_customer_profile(options)
     end
 
+    def delete_customer_profile(options)
+      response = gateway.delete_customer_profile(options)
+      [response.success?, response]
+    end
+
     # Adds credit card to the payment profile. Authorize.net calls it creating
     # customer payment profile.
     #
