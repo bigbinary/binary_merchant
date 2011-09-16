@@ -40,6 +40,10 @@ module BinaryMerchant #:nodoc:
       gateway.get_customer_profile(options)
     end
 
+    def update_customer_profile(options)
+      gateway.update_customer_profile(options)
+    end
+
     # Adds credit card to the payment profile. Authorize.net calls it creating
     # customer payment profile.
     #
