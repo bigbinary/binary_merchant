@@ -68,28 +68,26 @@ In the above case the call to gateway is intercepted and a response object is re
 
 ## Testing with BinaryMerchnat with full roundtrip
 
-Testing using above mechanism works. However it has one issue. ActiveMerchant does a number of validation checks while building the xml. In the above case xml is never built. To do exhaustive testing we would like xml to be built. Howver that xml should not be sent to Authorize.net .  Here is how you can do full roundtrip testing. The code example is taken from a minitest but it can easily be modified if you are using rspec.
+Testing using above mechanism works. However it has one issue. ActiveMerchant does a number of validation checks while building the xml. In the above case xml is never built. To do exhaustive testing we would like xml to be built. Howver that xml should not be sent to Authorize.net .  Here is how you can do full roundtrip testing.
 
-```ruby
-class GatewayTest < ActiveSupport::TestCase
-
-  def setup
+```
+describe User do
+  before do
     ADNCIMP.gateway.make_roundtrip = false
   end
-
-  def test_authorize_net_returns_customer_profile_id_without_roundtrip
-    user = Factory(:user).reload
-    assert user.vault_id, "customer profile id should not be nil"
-    assert_equal "53433", user.vault_id
+  context "customer_profile_id" do
+    it "with roundtrip" do
+      ADNCIMP.gateway.make_roundtrip = true
+      user = Factory(:user)
+      user.vault_id.should_not be_nil
+      user.vault_id.should == "4581836"
+    end
+    it "without roundtrip" do
+      user = Factory(:user)
+      user.vault_id.should_not be_nil
+      user.vault_id.should == ActiveMerchant::Billing::AuthorizeNetCimMockedGateway::CUSTOMER_PROFILE_ID
+    end
   end
-
-  def test_authorize_net_returns_customer_profile_id_with_roundtrip
-    ADNCIMP.gateway.make_roundtrip = true
-    user = Factory(:user).reload
-    assert user.vault_id, "customer profile id should not be nil"
-    assert_equal "4581836", user.vault_id
-  end
-
 end
 ```
 
