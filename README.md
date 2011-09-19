@@ -6,7 +6,7 @@ Currently BinaryMerchant supports <strong>AuthorizeNetGateway</strong> and <stro
 
 The API provided by Authorize.net CIM could be a bit confusing. Active Merchant has good job of hiding the complexity. However BinaryMerchant makes it even simpler.
 
-## Testing with BinaryMerchant without hitting the server
+## Testing with BinaryMerchant without hitting the Authorize.net server
 
 You have built your application using <strong>AuthorizeNetCimGateway</strong>. Now you want to test your code. Howver you do not want to hit Authorize.net server during tests. Well you can mock the requests with stub . But before that you need to know what params to expect in response. BinaryMerchant has figured all that out for you.
 
