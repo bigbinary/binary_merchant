@@ -56,9 +56,9 @@ Test for above code would be like
 describe User do
   context "customer_profile_id" do
     it "without roundtrip" do
-      user = Factory(:user).reload
+      user = Factory(:user)
       user.vault_id.should_not be_nil
-      user.vault_id.should == ActiveMerchant::Billing::AuthorizeNetCimMockedGateway::CUSTOMER_PROFILE_ID ,
+      user.vault_id.should == ActiveMerchant::Billing::AuthorizeNetCimMockedGateway::CUSTOMER_PROFILE_ID
     end
   end
 end
