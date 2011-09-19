@@ -12,6 +12,7 @@ module BinaryMerchant #:nodoc:
     #
     # * <tt>:amount</tt> -- Amount to be authorized. This is a required field.
     # * <tt>:creditcard</tt> -- credit card object . This is a required field.
+    # TODO write about extra
     # * <tt>:extra</tt> -- extra hash options. More on this coming up. This is an optional field.
     #
     # This method returns an array with two elements. The second element is the response object
