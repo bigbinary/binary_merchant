@@ -4,13 +4,11 @@ It is a payment processing utility tool built on top of [Active Merchant](https:
 
 Currently BinaryMerchant supports <strong>AuthorizeNetGateway</strong> and <strong>AuthorizeNetCimGateway</strong> gateways.
 
-The API provided by Authorize.net CIM could be a bit confusing. Active Merchant has good support for Authorize.net CIM gateway . However the API remains a little complex. This gem simplifies the API a lot.
+The API provided by Authorize.net CIM could be a bit confusing. Active Merchant has good job of hiding the complexity. However BinaryMerchant makes it even simpler.
 
 ## Testing with BinaryMerchant without hitting the server
 
-You have built your application using <strong>AuthorizeNetCimGateway</strong>. Now you want to test your code. Howver you do not want to hit Authorize.net server during tests. Some people try to use <tt>BogusGateway</tt> that comes with Active Merchant. However <tt>BogusGateway</tt> does not have all the methods that can be called on <tt>AuthorizeNetCimGateway</tt>.
-
-BinaryMerchant can help .
+You have built your application using <strong>AuthorizeNetCimGateway</strong>. Now you want to test your code. Howver you do not want to hit Authorize.net server during tests. Well you can mock the requests with stub . But before that you need to know what params to expect in response. BinaryMerchant has figured all that out for you.
 
 This gem provides a gateway called <tt>AuthorizeNetCimMockedGateway</tt> and this gateway returns predefined responses and does not hit Authorize.net server.
 
@@ -33,7 +31,40 @@ gateway_klass.logger = Rails.logger
 ::ADNCIMP = BinaryMerchant::AuthorizeNetCimGateway.new( gateway_klass.new(credentials) )
 ```
 
-Now you can go about doing your testing. All calls to gateway would be intercepted and a response object will be returned.
+Above we configured the gateway. Now let's see a concrete example. Let's say whenver a user record is created we want to create <tt>customer_profile_id</tt> for that record. The code would look something like this.
+
+```
+class User < ActiveRecord::Base
+  before_create :create_customer_profile_id
+
+  private
+
+  def create_customer_profile_id
+   _vault_id, response = *(ADNCIMP.add_user(email: self.email))
+   if _vault_id
+     self.vault_id = _vault_id
+   else
+     raise "customer_profile_id could not be created"
+   end
+  end
+end
+```
+
+Test for above code would be like
+
+```
+describe User do
+  context "customer_profile_id" do
+    it "without roundtrip" do
+      user = Factory(:user).reload
+      user.vault_id.should_not be_nil
+      user.vault_id.should == ActiveMerchant::Billing::AuthorizeNetCimMockedGateway::CUSTOMER_PROFILE_ID ,
+    end
+  end
+end
+```
+
+In the above case the call to gateway is intercepted and a response object is returned.
 
 ## Testing with BinaryMerchnat with full roundtrip
 
