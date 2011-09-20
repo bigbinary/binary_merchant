@@ -24,7 +24,7 @@ module BinaryMerchant #:nodoc:
 
     def add_user!(options)
       result = add_user(options).first
-      raise GatewayProcessorException unless result.first
+      raise BinaryMerchantException unless result.first
       result
     end
 
@@ -34,16 +34,47 @@ module BinaryMerchant #:nodoc:
     #
     # * <tt>:customer_profile_id</tt> . This is a required field.
     #
-    # If the operation is successful then response object is returned.
+    # This method returns an array with two elements. The second element is the response object
+    # returend by Active Merchant.
+    #
+    # If the operation is successful then the first element returns true.
+    # Upon failure the value of first element is set to false.
     #
     def get_customer_profile(options)
-      gateway.get_customer_profile(options)
+      response = gateway.get_customer_profile(options)
+      [response.success?, response]
     end
 
+    # Updates the customer profile for the given customer profile id.
+    #
+    # === options
+    #
+    # * <tt>:profile</tt> . This is a required field. This should be a hash and one of the keys of the hash must
+    # be :customer_profile_id, The other key is usually :email. This method is used to update the change in email
+    # address on customer profile.
+    #
+    # This method returns an array with two elements. The second element is the response object
+    # returend by Active Merchant.
+    #
+    # If the operation is successful then the first element returns true.
+    # Upon failure the value of first element is set to false.
+    #
     def update_customer_profile(options)
-      gateway.update_customer_profile(options)
+      response = gateway.update_customer_profile(options)
+      [response.success?, response]
     end
 
+    # Deletes the customer profile for the given customer profile id.
+    #
+    # === options
+    #
+    # * <tt>:customer_profile_id</tt> . This is a required field.
+    #
+    # This method returns an array with two elements. The second element is the response object
+    # returend by Active Merchant.
+    #
+    # If the operation is successful then the first element returns true.
+    # Upon failure the value of first element is set to false.
     def delete_customer_profile(options)
       response = gateway.delete_customer_profile(options)
       [response.success?, response]
@@ -85,7 +116,7 @@ module BinaryMerchant #:nodoc:
 
     def add_credit_card!(options)
       result = add_credit_card(options)
-      raise GatewayProcessorException unless result.first
+      raise BinaryMerchantException unless result.first
       result
     end
 
@@ -113,7 +144,7 @@ module BinaryMerchant #:nodoc:
 
     def authorize!(options)
       result = authorize(options)
-      raise GatewayProcessorException unless result.first
+      raise BinaryMerchantException unless result.first
       result
     end
 
@@ -143,7 +174,7 @@ module BinaryMerchant #:nodoc:
 
     def void!(options)
       result = void(options)
-      raise GatewayProcessorException unless result.first
+      raise BinaryMerchantException unless result.first
       result
     end
 
@@ -173,7 +204,7 @@ module BinaryMerchant #:nodoc:
 
     def refund!(options)
       result = refund(options)
-      raise GatewayProcessorException unless result.first
+      raise BinaryMerchantException unless result.first
       result
     end
 
@@ -203,7 +234,7 @@ module BinaryMerchant #:nodoc:
 
     def capture!(options)
       result = capture(options)
-      raise GatewayProcessorException unless result.first
+      raise BinaryMerchantException unless result.first
       result
     end
 
