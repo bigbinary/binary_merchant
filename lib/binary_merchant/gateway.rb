@@ -1,7 +1,6 @@
 module BinaryMerchant #:nodoc:
 
-  # TODO rename to BinaryMerchantException
-  class GatewayException < StandardError
+  class BinaryMerchantException < StandardError
   end
 
   class Gateway
