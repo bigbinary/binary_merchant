@@ -6,14 +6,15 @@ Currently BinaryMerchant supports <strong>AuthorizeNetGateway</strong> and <stro
 
 The API provided by Authorize.net CIM could be a bit confusing. Active Merchant has good job of hiding the complexity. However BinaryMerchant makes it even simpler.
 
-## Show me an example how BinaryMerchant is simpler than ActiveMerchant
+## Show me an example of how BinaryMerchant is simpler than ActiveMerchant
 
-Let's say you are trying to make an authorization request with Authorize.net using <tt>AuthorizeNetCimGateway</tt> . Using ActiveMechant your code will look like this.
+Let's say you are making an authorization request with Authorize.net using <tt>AuthorizeNetCimGateway</tt> . Using ActiveMechant your code will look like this.
 
 ```ruby
 options = { transaction: { type: :auth_only, amount: amount,
-                           customer_profile_id: customer_profile_id, customer_payment_profile_id: customer_payment_profile_id }}
-response = gateway.create_customer_profile_transaction(hash)
+                           customer_profile_id: customer_profile_id,
+                           customer_payment_profile_id: customer_payment_profile_id }}
+response = gateway.create_customer_profile_transaction(options)
 if response.success?
   transaction_id = response.params['direct_response']['transaction_id']
 else
@@ -21,7 +22,7 @@ else
 end
 ```
 
-In the above case you need to call a method named <tt>create_customer_profile_transaction</tt> . Also when you get the response object you
+In the above case method named <tt>create_customer_profile_transaction</tt> was invoked. Also when you get the response object you
 need to do <tt>response.params['direct_response']['transaction_id']</tt> .
 
 With BinaryMerchant above could could be written as
@@ -31,7 +32,7 @@ options = {amount: amount, customer_profile_id: customer_profile_id, customer_pa
 transaction_id, response = *gateway.authorize(options)
 ```
 
-In the above case you are calling a method called <tt>authorize</tt>. If the authorization was a success then <tt>transaction_id</tt> will have a value. If authorization fails then transaction_id will be nil.
+In the above case you are calling a method called <tt>authorize</tt> which is much better to look at than a method named <tt>create_customer_profile_transaction</tt>. If the authorization was a success then <tt>transaction_id</tt> will have a value. If authorization fails then transaction_id will be nil.
 
 ## Testing with BinaryMerchant without hitting the Authorize.net server
 
