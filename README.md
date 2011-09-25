@@ -121,7 +121,7 @@ end
 
 By default <tt>make_roundtrip</tt> value is false.
 
-## Strengthen validations
+## Stronger validations
 
 ActiveMerchant has validations to ensure that needed require fields are passed. For example when update the customer profile using <tt>AuthorizeNetCimGateway</tt> the method should look like this
 
@@ -131,15 +131,12 @@ gateway.update_customer_profile({customer_profile_id: '2358805854', email: 'newe
 
 In the above code if you forget to pass the key <tt>customer_profile_id</tt> then ActiveMerchant will raise an error indicating that key <tt>customer_profile_id</tt> is required.
 
-However if you pass the value <tt>nil</tt> for key <tt>customer_profile_id</tt> then ActiveMerchant will not complain during validations. However the code fails somewhere deep down and I had to spend some time debugging it. BinaryMerchant strenghtenes that validations by ensuring that for every required key the value passed must also be not nil.
+However if you pass the value <tt>nil</tt> for key <tt>customer_profile_id</tt> then ActiveMerchant will not complain during validations. However the code fails somewhere deep down and I had to spend some time debugging it. BinaryMerchant strengthenes that validations by ensuring that for every required key the value passed must also be not nil.
 
-## Logging of xml in development
+## Tip: Logging of xml in development
 
-If you look at previous snippet of code you will see following line
+In development you can see the xml that is sent to gateway and the response that is received from the gateway by adding
+following line.
 
 ```ruby
 gateway_klass.logger = Rails.logger
-```
-Because of that line in development mode you will see the xml request that is sent to Authorize.net by Active Merchant in log. Similarly the response sent by Authorize.net will also be seen in the log.
-
-
