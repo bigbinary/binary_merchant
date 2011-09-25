@@ -8,6 +8,8 @@ module BinaryMerchant
   autoload :AuthorizeNetCimGateway, 'binary_merchant/gateways/authorize_net_cim'
 end
 
+require "binary_merchant/requires"
+
 require "binary_merchant/gateways/authorize_net_mocked"
 require "binary_merchant/gateways/authorize_net_cim_mocked"
 
@@ -19,3 +21,4 @@ require 'binary_merchant/gateways/mocked_responses/customer_profile_transaction_
 require 'binary_merchant/gateways/mocked_responses/customer_profile_transaction_response_for_capture'
 require 'binary_merchant/gateways/mocked_responses/update_customer_profile'
 require 'binary_merchant/gateways/mocked_responses/delete_customer_profile'
+
