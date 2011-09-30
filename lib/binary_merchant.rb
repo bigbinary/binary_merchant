@@ -6,6 +6,8 @@ module BinaryMerchant
   autoload :Gateway
   autoload :AuthorizeNetGateway, 'binary_merchant/gateways/authorize_net'
   autoload :AuthorizeNetCimGateway, 'binary_merchant/gateways/authorize_net_cim'
+
+  autoload :CyberSourceGateway, 'binary_merchant/gateways/cyber_source'
 end
 
 require "binary_merchant/requires"
