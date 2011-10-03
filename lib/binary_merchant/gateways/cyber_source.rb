@@ -17,11 +17,14 @@ module BinaryMerchant #:nodoc:
     end
 
     def capture(options)
-      response = gateway.authorize(options.fetch(:amount),
-                                   options.fetch(:creditcard),
-                                   {order_id: options.fetch(:order_id),
-                                    email: options.fetch(:email),
-                                    billing_address: options.fetch(:address)})
+      authorization = []
+      authorization << options.fetch(:order_id)
+      authorization << options.fetch(:transaction_gid)
+      authorization << options.fetch(:request_token)
+
+      response = gateway.capture(options.fetch(:amount),
+                                   authorization.join(';'),
+                                   { billing_address: options.fetch(:address)})
       transaction_id = response.success? ? response.params['requestID'] : nil
       [transaction_id, response]
     end
