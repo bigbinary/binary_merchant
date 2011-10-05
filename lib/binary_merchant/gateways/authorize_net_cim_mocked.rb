@@ -13,7 +13,7 @@ module ActiveMerchant
 
       attr_accessor :make_roundtrip
 
-      def delete_credit_card(options)
+      def delete_customer_payment_profile(options)
         Response.new(true, SUCCESS_MESSAGE, options, { } )
       end
 
