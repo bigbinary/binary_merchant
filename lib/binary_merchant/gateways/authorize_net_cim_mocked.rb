@@ -13,6 +13,10 @@ module ActiveMerchant
 
       attr_accessor :make_roundtrip
 
+      def delete_credit_card(options)
+        Response.new(true, SUCCESS_MESSAGE, options, { } )
+      end
+
       def delete_customer_profile(options)
         if make_roundtrip
           self.send(:extend, MockedCustomerDeleteProfileResponseXml)
