@@ -120,6 +120,13 @@ module BinaryMerchant #:nodoc:
       result
     end
 
+    def delete_credit_card(options)
+      hash = {customer_profile_id: options.fetch(:customer_profile_id),
+              customer_payment_profile_id: options.fetch(:customer_payment_profile_id)}
+      response = gateway.delete_customer_payment_profile(hash)
+      [response.success?, response]
+    end
+
     # Creates authorization for the given amount.
     #
     # === Options
