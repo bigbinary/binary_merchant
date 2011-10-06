@@ -17,20 +17,36 @@ module BinaryMerchant #:nodoc:
     end
 
     def capture(options)
-      authorization = []
-      authorization << options.fetch(:order_id)
-      authorization << options.fetch(:transaction_gid)
-      authorization << options.fetch(:request_token)
+      identification = []
+      identification << options.fetch(:order_id)
+      identification << options.fetch(:transaction_gid)
+      identification << options.fetch(:request_token)
 
       response = gateway.capture(options.fetch(:amount),
-                                   authorization.join(';'),
+                                   identification.join(';'),
                                    { billing_address: options.fetch(:address)})
       transaction_id = response.success? ? response.params['requestID'] : nil
       [transaction_id, response]
     end
 
+    def auth_reversal(options)
+      identification = []
+      identification << options.fetch(:order_id)
+      identification << options.fetch(:transaction_gid)
+      identification << options.fetch(:request_token)
+
+      response = gateway.auth_reversal(options.fetch(:amount),identification.join(';'))
+      transaction_id = response.success? ? response.params['requestID'] : nil
+      [transaction_id, response]
+    end
+
     def void(options)
-      response = gateway.void(options.fetch(:transaction_id))
+      identification = []
+      identification << options.fetch(:order_id)
+      identification << options.fetch(:transaction_gid)
+      identification << options.fetch(:request_token)
+
+      response = gateway.void(identification.join(';'))
       transaction_id = response.success? ? response.params['requestID'] : nil
       [transaction_id, response]
     end
