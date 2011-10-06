@@ -14,6 +14,7 @@ require "binary_merchant/requires"
 
 require "binary_merchant/gateways/authorize_net_mocked"
 require "binary_merchant/gateways/authorize_net_cim_mocked"
+require "binary_merchant/gateways/cyber_source_mocked"
 
 require 'binary_merchant/gateways/mocked_responses/create_customer_profile'
 require 'binary_merchant/gateways/mocked_responses/create_customer_payment_profile'
