@@ -8,12 +8,12 @@ module BinaryMerchant #:nodoc:
 
     # Creates authorization for the given amount.
     #
-    # === Options
+    # ==== Parameters
     #
-    # * <tt>:amount</tt> -- Amount to be authorized. This is a required field.
-    # * <tt>:creditcard</tt> -- credit card object . This is a required field.
-    # TODO write about extra
-    # * <tt>:extra</tt> -- extra hash options. More on this coming up. This is an optional field.
+    # * <tt>money</tt> -- The amount to be authorized as an Integer value in cents. Required field.
+    # * <tt>creditcard</tt> -- The CreditCard details for the transaction. Required field.
+    # * <tt>options</tt> -- A hash of optional parameters. You can pass :address , :billing_address and :shipping_address.
+    # :address is just a convenience key for :billing_address.
     #
     # This method returns an array with two elements. The second element is the response object
     # returend by Active Merchant.
@@ -21,8 +21,9 @@ module BinaryMerchant #:nodoc:
     # If the operation is successful then the first element contains the transaction id
     # returned by Authorize.net . Upon failure the value of first element is set to nil.
     #
-    def authorize(options)
-      response = gateway.authorize(options.fetch(:amount), options.fetch(:creditcard), options[:extra])
+    def authorize(money, creditcard, options = {})
+      require 'ruby-debug'; debugger
+      response = gateway.authorize(money, creditcard, options)
       transaction_id = response.success? ? response.params['transaction_id'] : nil
       [transaction_id, response]
     end
