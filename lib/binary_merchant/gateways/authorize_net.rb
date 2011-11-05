@@ -22,7 +22,6 @@ module BinaryMerchant #:nodoc:
     # returned by Authorize.net . Upon failure the value of first element is set to nil.
     #
     def authorize(money, creditcard, options = {})
-      require 'ruby-debug'; debugger
       response = gateway.authorize(money, creditcard, options)
       transaction_id = response.success? ? response.params['transaction_id'] : nil
       [transaction_id, response]
