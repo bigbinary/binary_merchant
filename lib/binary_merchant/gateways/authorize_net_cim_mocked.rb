@@ -1,3 +1,4 @@
+
 module ActiveMerchant
   module Billing
     class AuthorizeNetCimMockedGateway < AuthorizeNetCimGateway
