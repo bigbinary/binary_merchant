@@ -1,3 +1,11 @@
+require 'binary_merchant/gateways/mocked_responses/authorize_net_cim/create_customer_profile'
+require 'binary_merchant/gateways/mocked_responses/authorize_net_cim/create_customer_payment_profile'
+require 'binary_merchant/gateways/mocked_responses/authorize_net_cim/customer_profile_transaction_response_for_authorization'
+require 'binary_merchant/gateways/mocked_responses/authorize_net_cim/customer_profile_transaction_response_for_void'
+require 'binary_merchant/gateways/mocked_responses/authorize_net_cim/customer_profile_transaction_response_for_refund'
+require 'binary_merchant/gateways/mocked_responses/authorize_net_cim/customer_profile_transaction_response_for_capture'
+require 'binary_merchant/gateways/mocked_responses/authorize_net_cim/update_customer_profile'
+require 'binary_merchant/gateways/mocked_responses/authorize_net_cim/delete_customer_profile'
 
 module ActiveMerchant
   module Billing
