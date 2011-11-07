@@ -1,7 +1,4 @@
-module BinaryMerchant #:nodoc:
-
-  class BinaryMerchantException < StandardError
-  end
+module BinaryMerchant
 
   class Gateway
 
@@ -13,7 +10,11 @@ module BinaryMerchant #:nodoc:
 
     def self.logger=(_logger)
       @logger = _logger
-      @gateway.class.logger = @logger if @gateway
+      gateway.class.logger = @logger if gateway
+    end
+
+    def method_missing(method, *args, &block)
+      gateway.send(method, *args, &block)
     end
 
   end

@@ -158,5 +158,4 @@ module BinaryMerchant #:nodoc:
     end
 
   end
-
 end
