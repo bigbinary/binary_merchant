@@ -22,64 +22,6 @@ module BinaryMerchant #:nodoc:
       [customer_profile_id, response]
     end
 
-    def add_user!(options)
-      result = add_user(options).first
-      raise BinaryMerchantException unless result.first
-      result
-    end
-
-    # Retrieves the customer profile for the given customer profile id.
-    #
-    # === options
-    #
-    # * <tt>:customer_profile_id</tt> . This is a required field.
-    #
-    # This method returns an array with two elements. The second element is the response object
-    # returend by Active Merchant.
-    #
-    # If the operation is successful then the first element returns true.
-    # Upon failure the value of first element is set to false.
-    #
-    def get_customer_profile(options)
-      response = gateway.get_customer_profile(options)
-      [response.success?, response]
-    end
-
-    # Updates the customer profile for the given customer profile id.
-    #
-    # === options
-    #
-    # * <tt>:profile</tt> . This is a required field. This should be a hash and one of the keys of the hash must
-    # be :customer_profile_id, The other key is usually :email. This method is used to update the change in email
-    # address on customer profile.
-    #
-    # This method returns an array with two elements. The second element is the response object
-    # returend by Active Merchant.
-    #
-    # If the operation is successful then the first element returns true.
-    # Upon failure the value of first element is set to false.
-    #
-    def update_customer_profile(options)
-      response = gateway.update_customer_profile(options)
-      [response.success?, response]
-    end
-
-    # Deletes the customer profile for the given customer profile id.
-    #
-    # === options
-    #
-    # * <tt>:customer_profile_id</tt> . This is a required field.
-    #
-    # This method returns an array with two elements. The second element is the response object
-    # returend by Active Merchant.
-    #
-    # If the operation is successful then the first element returns true.
-    # Upon failure the value of first element is set to false.
-    def delete_customer_profile(options)
-      response = gateway.delete_customer_profile(options)
-      [response.success?, response]
-    end
-
     # Adds credit card to the payment profile. Authorize.net calls it creating
     # customer payment profile.
     #
@@ -114,12 +56,6 @@ module BinaryMerchant #:nodoc:
       [payment_profile_id, response]
     end
 
-    def add_credit_card!(options)
-      result = add_credit_card(options)
-      raise BinaryMerchantException unless result.first
-      result
-    end
-
     def delete_credit_card(options)
       hash = {customer_profile_id: options.fetch(:customer_profile_id),
               customer_payment_profile_id: options.fetch(:customer_payment_profile_id)}
@@ -149,12 +85,6 @@ module BinaryMerchant #:nodoc:
       [transaction_id, response]
     end
 
-    def authorize!(options)
-      result = authorize(options)
-      raise BinaryMerchantException unless result.first
-      result
-    end
-
     # Voids a previously created transaction.
     #
     # === Options
@@ -177,12 +107,6 @@ module BinaryMerchant #:nodoc:
       response = gateway.create_customer_profile_transaction(hash)
       transaction_id = response.success? ?  response.params['direct_response']['transaction_id'] : nil
       [transaction_id, response]
-    end
-
-    def void!(options)
-      result = void(options)
-      raise BinaryMerchantException unless result.first
-      result
     end
 
     # Refunds a previously captured action.
@@ -209,12 +133,6 @@ module BinaryMerchant #:nodoc:
       [transaction_id, response]
     end
 
-    def refund!(options)
-      result = refund(options)
-      raise BinaryMerchantException unless result.first
-      result
-    end
-
     # Captures a previously authorized transaction.
     #
     # === Options
@@ -237,12 +155,6 @@ module BinaryMerchant #:nodoc:
       response = gateway.create_customer_profile_transaction(hash)
       transaction_id = response.success? ?  response.params['direct_response']['transaction_id'] : nil
       [transaction_id, response]
-    end
-
-    def capture!(options)
-      result = capture(options)
-      raise BinaryMerchantException unless result.first
-      result
     end
 
   end
