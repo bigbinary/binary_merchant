@@ -7,8 +7,24 @@ module ActiveMerchant
 
       attr_accessor :make_roundtrip
 
-      def authorize(amount, creditcard, extra = {})
-        Response.new(true, SUCCESS_MESSAGE, {'transaction_id' => '123456'} , {} )
+      def authorize(amount, creditcard, options = {})
+        Response.new(true, SUCCESS_MESSAGE, {'transaction_id' => '1234567890'} , {} )
+      end
+
+      def capture(amount, transaction_id, options = {})
+        Response.new(true, SUCCESS_MESSAGE, {'transaction_id' => '1234567891'} , {} )
+      end
+
+      def purchase(amount, creditcard, options = {})
+        Response.new(true, SUCCESS_MESSAGE, {'transaction_id' => '1234567892'} , {} )
+      end
+
+      def void(transaction_id, options = {})
+        Response.new(true, SUCCESS_MESSAGE, {'transaction_id' => '1234567893'} , {} )
+      end
+
+      def refund(amount, transaction_id, options = {})
+        Response.new(true, SUCCESS_MESSAGE, {'transaction_id' => '1234567894'} , {} )
       end
 
     end
