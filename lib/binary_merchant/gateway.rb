@@ -1,5 +1,4 @@
 module BinaryMerchant
-
   class Gateway
 
     attr_reader :gateway
@@ -11,6 +10,12 @@ module BinaryMerchant
     def self.logger=(_logger)
       @logger = _logger
       gateway.class.logger = @logger if gateway
+    end
+
+    # this is needed because ActiveSupport adds a method called
+    # capture becase of which method_missing is not fired
+    def capture(*args, &block)
+      gateway.send(:capture, *args, &block)
     end
 
     def method_missing(method, *args, &block)
