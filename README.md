@@ -1,5 +1,7 @@
 # BinaryMerchant
 
+### Update: This gem has been discontinued. Please do not use this gem ###
+
 It is a payment processing utility tool built on top of [Active Merchant](https://github.com/shopify/active_merchant) .
 
 Currently BinaryMerchant supports <strong>AuthorizeNetGateway</strong> and <strong>AuthorizeNetCimGateway</strong> gateways.
